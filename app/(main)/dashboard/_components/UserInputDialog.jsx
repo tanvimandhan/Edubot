@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
     Dialog,
     DialogClose,
@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { useRouter } from 'next/navigation'
+import { UserContext } from '@/app/_context/UserContext'
 
 //import {DiscussionRoom}
   
@@ -28,19 +29,20 @@ const UserInputDialog = ({children,coachingOption}) => {
   const [loading,setLoading]=useState(false);
   const [openDialog,setOpenDialog]=useState(false);
   const router=useRouter();
-
+  const {userData}=useContext(UserContext)
 
   const onClickNext=async()=>{
     setLoading(true);
     const result=await createDiscussionRoom({
       topic:topic,
       coachingOption:coachingOption?.name,
-      expertName:selectedExpert
+      expertName:selectedExpert,
+      uid:userData?._id
     })
     console.log(result);
     setLoading(false);
     setOpenDialog(false);
-    router.push('/discussion-room'+result);
+    router.push('/discussion-room/'+result);
   }
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
